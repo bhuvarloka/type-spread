@@ -1,0 +1,20 @@
+{
+  "name": "type-spread",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.32.1",
+  "devDependencies": {
+    "@tailwindcss/vite": "~4.2.3",
+    "tailwindcss": "~4.2.3",
+    "vite": "8.0.8"
+  }
+}
