@@ -4,20 +4,115 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Type Spread</title>
-    <link rel="stylesheet" href="style.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Outfit:wght@100..900&display=swap"
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.min.js"></script>
-    <script src="sketch.js" defer></script>
+    <link rel="stylesheet" href="/src/style/style.css" />
+    <script type="module" src="/src/main.js"></script>
+    <script src="/src/sketch.js" defer></script>
   </head>
   <body>
     <main></main>
-    <input
-      id="message-input"
-      type="text"
-      value="EVERYWHERE IS JUST ONE PLACE"
-    />
+
+    <!-- Settings Panel -->
+    <aside
+      id="settings-panel"
+      class="fixed top-0 right-0 h-screen w-80 translate-x-full z-1000 overflow-y-auto bg-white border-l-2 border-black transition-transform duration-300 ease-in-out flex flex-col gap-8 py-8 px-6"
+    >
+      <h2 class="text-xl font-semibold tracking-widest">Settings</h2>
+
+      <!-- Message -->
+      <div class="flex flex-col gap-2">
+        <h3 class="text-xs font-semibold tracking-widest uppercase">Message</h3>
+        <input
+          id="message-input"
+          type="text"
+          value="EVERYWHERE IS JUST ONE PLACE"
+          class="w-full text-sm border border-black/20 rounded-lg px-3 py-2 bg-white focus:outline-none focus:border-black/50 transition-colors"
+        />
+        <p class="text-xs">Press Enter to apply.</p>
+      </div>
+
+      <!-- Tangent -->
+      <div class="flex flex-col gap-2">
+        <h3 class="text-xs font-semibold tracking-widest uppercase">Tangent</h3>
+        <label class="flex items-center justify-between cursor-pointer">
+          <span class="text-sm">Axis-locked spread</span>
+          <div class="relative">
+            <input type="checkbox" id="tangent-toggle" class="sr-only peer" />
+            <div
+              class="w-10 h-5 bg-black/10 rounded-full peer peer-checked:bg-black transition-colors duration-200"
+            ></div>
+            <div
+              class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 peer-checked:translate-x-5"
+            ></div>
+          </div>
+        </label>
+      </div>
+
+      <!-- Color Palette -->
+      <div id="color-palette-section" class="flex flex-col gap-3">
+        <h3 class="text-xs font-semibold tracking-widest uppercase">Colors</h3>
+        <div id="color-list" class="flex flex-wrap gap-2"></div>
+        <button
+          id="add-color-btn"
+          class="text-xs font-semibold tracking-wider uppercase mt-1 hover:text-black transition-colors duration-200 cursor-pointer text-left"
+        >
+          + Add color
+        </button>
+      </div>
+      <!-- Cycle Fill -->
+      <div class="flex flex-col gap-2">
+        <h3 class="text-xs font-semibold tracking-widest uppercase">
+          Cycle Fill
+        </h3>
+        <label class="flex items-center justify-between cursor-pointer">
+          <span class="text-sm">Animate fill colors</span>
+          <div class="relative">
+            <input
+              type="checkbox"
+              id="cycle-fill-toggle"
+              class="sr-only peer"
+            />
+            <div
+              class="w-10 h-5 bg-black/10 rounded-full peer peer-checked:bg-black transition-colors duration-200"
+            ></div>
+            <div
+              class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 peer-checked:translate-x-5"
+            ></div>
+          </div>
+        </label>
+      </div>
+      <label class="flex items-center justify-between gap-3 mt-1">
+        <span class="text-sm">Fill steps</span>
+        <input
+          type="number"
+          id="fill-steps-input"
+          min="0"
+          max="255"
+          value="1"
+          class="w-16 text-sm text-left border border-black/20 rounded pl-2 pr-0.5 py-0.5 focus:outline-none focus:border-black/50"
+        />
+      </label>
+      <!-- Clear Canvas -->
+      <div class="mt-auto">
+        <button
+          id="clear-canvas-btn"
+          class="w-full text-xs font-semibold tracking-wider uppercase py-2 px-4 border border-black/20 rounded-lg hover:bg-black hover:text-white transition-colors duration-200 cursor-pointer"
+        >
+          Clear canvas
+        </button>
+      </div>
+    </aside>
+
+    <!-- Gear trigger -->
+    <button
+      id="settings-trigger"
+      class="fixed top-6 right-6 w-6 h-6 z-[2000] bg-transparent border-none cursor-pointer flex items-center justify-center opacity-5 hover:opacity-100 transition-opacity duration-300"
+    >
+      <img src="" alt="Settings" class="w-full h-full object-contain" />
+    </button>
   </body>
 </html>

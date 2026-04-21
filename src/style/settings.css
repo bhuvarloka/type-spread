@@ -1,0 +1,33 @@
+/* Settings panel — custom properties not expressible in Tailwind utilities */
+
+/* Color swatch input sizing (browser resets conflict with utility classes) */
+#color-list input[type="color"] {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border-radius: 0.5rem;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  background: none;
+  transition: border-color 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+#color-list input[type="color"]:hover {
+  border-color: rgba(0, 0, 0, 0.4);
+}
+
+#color-list input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 2px;
+}
+
+#color-list input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 0.35rem;
+}
+
+/* Toggle pill — the peer sibling div needs a pointer-events fix in Safari */
+label .peer ~ div {
+  pointer-events: none;
+}

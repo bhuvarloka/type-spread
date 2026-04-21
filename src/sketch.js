@@ -1,12 +1,15 @@
-let TANGENT = false; // true = axis-locked tangency; false = directional edge-touching
-let CYCLE_FILL = true; // true = rectangles cycle through FILL_COLORS ping-pong style
+// Expose mutable state so the panel UI can read/write it
+window._sketchTangent = false;
+window._sketchCycleFill = true;
+window._sketchFillColors = ["#000000", "#ff0000", "#0000ff"];
+window._sketchMessage = "EVERYWHERE IS JUST ONE PLACE";
+window._sketchMessageChanged = false;
 
-const FILL_COLORS = ["#000000", "#ff0000", "#0000ff"];
-const FILL_STEPS = 255; // rectangles to transition between each color pair
+window._sketchFillSteps = 1;
+window._sketchClearCanvas = false;
 
 let blocks = [];
 let lastX, lastY, lastW, lastH;
-let message = "EVERYWHERE IS JUST ONE PLACE";
 let messageIndex = 0;
 let fillStep = 0;
 let firstBlock = true;
@@ -20,9 +23,12 @@ function setup() {
   background(255);
   noStroke();
   textFont("Outfit");
-  // textFont("Bodoni Moda");
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
+
+  // sync message input default into sketch state
+  const input = document.getElementById("message-input");
+  if (input) window._sketchMessage = input.value || window._sketchMessage;
 }
 
 function windowResized() {
@@ -39,8 +45,8 @@ document.addEventListener("DOMContentLoaded", function () {
   if (input) {
     input.addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
-        message = input.value || message;
-        messageIndex = 0;
+        window._sketchMessage = input.value || window._sketchMessage;
+        window._sketchMessageChanged = true;
       }
     });
   }
@@ -51,22 +57,28 @@ function mousePressed() {
 }
 
 function getCycleFill() {
-  let n = FILL_COLORS.length;
-  let totalSteps = (n - 1) * FILL_STEPS;
-  // ping-pong: forward 0..totalSteps-1, then mirror back
-  let cycle = fillStep % (totalSteps * 2);
-  let pos = min(
-    cycle < totalSteps ? cycle : totalSteps * 2 - cycle,
-    totalSteps - 1,
-  );
-  let segIndex = floor(pos / FILL_STEPS);
-  let segT = (pos % FILL_STEPS) / FILL_STEPS;
+  const colors = window._sketchFillColors;
+  let n = colors.length;
+  const steps = window._sketchFillSteps;
+
+  if (steps === 0) {
+    let c = color(colors[fillStep % n]);
+    fillStep++;
+    return c;
+  }
+
+  let segments = n - 1;
+  let totalSlots = segments * (steps + 1) + 1;
+  let period = (totalSlots - 1) * 2;
+  let slot = fillStep % period;
   fillStep++;
-  return lerpColor(
-    color(FILL_COLORS[segIndex]),
-    color(FILL_COLORS[segIndex + 1]),
-    segT,
-  );
+
+  let pos = slot < totalSlots ? slot : period - slot;
+  if (pos === totalSlots - 1) return color(colors[n - 1]);
+  let segIndex = floor(pos / (steps + 1));
+  let t = (pos % (steps + 1)) / (steps + 1);
+
+  return lerpColor(color(colors[segIndex]), color(colors[segIndex + 1]), t);
 }
 
 function getRectDistanceToEdge(rectW, rectH, dirX, dirY) {
@@ -78,7 +90,26 @@ function getRectDistanceToEdge(rectW, rectH, dirX, dirY) {
 }
 
 function draw() {
-  if (mouseIsPressed) {
+  if (window._sketchClearCanvas) {
+    blocks = [];
+    background(255);
+    firstBlock = true;
+    fillStep = 0;
+    messageIndex = 0;
+    window._sketchClearCanvas = false;
+  }
+
+  if (window._sketchMessageChanged) {
+    messageIndex = 0;
+    window._sketchMessageChanged = false;
+  }
+
+  const hovered = document.elementFromPoint(mouseX, mouseY);
+  const blocked =
+    hovered?.closest("#settings-panel") ||
+    hovered?.closest("#settings-trigger");
+
+  if (mouseIsPressed && !blocked) {
     let d = dist(mouseX, mouseY, lastX, lastY);
     if (firstBlock || d > 45) {
       let w = random(40, 90);
@@ -89,9 +120,9 @@ function draw() {
       if (!firstBlock) {
         let dx = mouseX - lastX;
         let dy = mouseY - lastY;
-        const OVERLAP = 1; // 1px overlap to close sub-pixel gaps
+        const OVERLAP = 1;
 
-        if (TANGENT) {
+        if (window._sketchTangent) {
           if (abs(dx) > abs(dy)) {
             newX = lastX + (dx > 0 ? 1 : -1) * (lastW / 2 + w / 2 - OVERLAP);
             newY = lastY;
@@ -122,12 +153,14 @@ function draw() {
         y: newY,
         w: w,
         h: h,
-        char: message[messageIndex],
+        char: window._sketchMessage[
+          messageIndex % window._sketchMessage.length
+        ],
         s: 0.1,
-        fillColor: CYCLE_FILL ? getCycleFill() : color(0),
+        fillColor: window._sketchCycleFill ? getCycleFill() : color(0),
       });
 
-      messageIndex = (messageIndex + 1) % message.length;
+      messageIndex = (messageIndex + 1) % window._sketchMessage.length;
       lastX = newX;
       lastY = newY;
       lastW = w;
