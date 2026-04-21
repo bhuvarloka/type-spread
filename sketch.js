@@ -1,4 +1,4 @@
-let TANGENT = true; // true = axis-locked tangency; false = directional edge-touching
+let TANGENT = false; // true = axis-locked tangency; false = directional edge-touching
 let CYCLE_FILL = true; // true = rectangles cycle through FILL_COLORS ping-pong style
 
 const FILL_COLORS = ["#000000", "#ff0000", "#0000ff"];
@@ -20,6 +20,7 @@ function setup() {
   background(255);
   noStroke();
   textFont("Outfit");
+  // textFont("Bodoni Moda");
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
 }
