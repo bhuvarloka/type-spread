@@ -1,4 +1,3 @@
-// --- Panel open/close ---
 const panel = document.getElementById("settings-panel");
 const trigger = document.getElementById("settings-trigger");
 const triggerImg = trigger.querySelector("img");
@@ -7,20 +6,16 @@ const GEAR_ICON = new URL("./images/gear.svg", import.meta.url).href;
 const CLOSE_ICON = new URL("./images/close.svg", import.meta.url).href;
 
 triggerImg.src = GEAR_ICON;
+trigger.style.filter = "invert(1)";
 
 trigger.addEventListener("click", () => {
   const isOpen = panel.classList.toggle("translate-x-0");
   panel.classList.toggle("translate-x-full", !isOpen);
   document.body.classList.toggle("panel-open", isOpen);
   triggerImg.src = isOpen ? CLOSE_ICON : GEAR_ICON;
-  // gear icon is dark on open, inverted (white) on closed canvas
   trigger.style.filter = isOpen ? "none" : "invert(1)";
 });
 
-// start with gear visible but faint — panel closed
-trigger.style.filter = "invert(1)";
-
-// --- Message input ---
 const msgInput = document.getElementById("message-input");
 msgInput?.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
@@ -29,21 +24,23 @@ msgInput?.addEventListener("keydown", (e) => {
   }
 });
 
-// --- Tangent toggle ---
 const tangentToggle = document.getElementById("tangent-toggle");
 tangentToggle?.addEventListener("change", () => {
   window._sketchTangent = tangentToggle.checked;
 });
 
-// --- Cycle fill toggle ---
 const cycleFillToggle = document.getElementById("cycle-fill-toggle");
+const colorPaletteSection = document.getElementById("color-palette-section");
+
+function syncColorSectionVisibility() {
+  colorPaletteSection.style.display = cycleFillToggle.checked ? "flex" : "none";
+}
+
 cycleFillToggle?.addEventListener("change", () => {
   window._sketchCycleFill = cycleFillToggle.checked;
-  document.getElementById("color-palette-section").style.display =
-    cycleFillToggle.checked ? "flex" : "none";
+  syncColorSectionVisibility();
 });
 
-// --- Color palette management ---
 const colorList = document.getElementById("color-list");
 const addColorBtn = document.getElementById("add-color-btn");
 
@@ -90,20 +87,17 @@ addColorBtn?.addEventListener("click", () => {
   renderColors();
 });
 
-// --- Clear canvas button ---
 const clearCanvasBtn = document.getElementById("clear-canvas-btn");
 clearCanvasBtn?.addEventListener("click", () => {
   window._sketchClearCanvas = true;
 });
 
-// init after sketch globals are ready (p5 sets them via window._sketch*)
 document.addEventListener("DOMContentLoaded", () => {
-  // sync toggle initial states from sketch defaults
+  if (msgInput) window._sketchMessage = msgInput.value || window._sketchMessage;
   if (tangentToggle) tangentToggle.checked = !!window._sketchTangent;
   if (cycleFillToggle) {
     cycleFillToggle.checked = !!window._sketchCycleFill;
-    document.getElementById("color-palette-section").style.display =
-      cycleFillToggle.checked ? "flex" : "none";
+    syncColorSectionVisibility();
   }
   if (fillStepsInput) fillStepsInput.value = window._sketchFillSteps;
   renderColors();

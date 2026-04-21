@@ -6,11 +6,11 @@ window._sketchCycleFill = true;
 window._sketchFillColors = ["#000000", "#ff0000", "#0000ff"];
 window._sketchMessage = "EVERYWHERE IS JUST ONE PLACE";
 window._sketchMessageChanged = false;
-
 window._sketchFillSteps = 12;
 window._sketchClearCanvas = false;
 
 new p5((p) => {
+  const mainEl = document.querySelector("main");
   let blocks = [];
   let lastX, lastY, lastW, lastH;
   let messageIndex = 0;
@@ -18,32 +18,32 @@ new p5((p) => {
   let firstBlock = true;
 
   p.setup = function () {
-    const main = document.querySelector("main");
-    let w = main ? main.offsetWidth : p.windowWidth;
-    let h = main ? main.offsetHeight : p.windowHeight;
+    let w = mainEl ? mainEl.offsetWidth : p.windowWidth;
+    let h = mainEl ? mainEl.offsetHeight : p.windowHeight;
     let canvas = p.createCanvas(w, h);
-    if (main) canvas.parent(main);
+    if (mainEl) canvas.parent(mainEl);
     p.background(255);
     p.noStroke();
     p.textFont("Outfit");
     p.textAlign(p.CENTER, p.CENTER);
     p.rectMode(p.CENTER);
-
-    const input = document.getElementById("message-input");
-    if (input) window._sketchMessage = input.value || window._sketchMessage;
   };
 
   p.windowResized = function () {
-    const main = document.querySelector("main");
-    let w = main ? main.offsetWidth : p.windowWidth;
-    let h = main ? main.offsetHeight : p.windowHeight;
+    let w = mainEl ? mainEl.offsetWidth : p.windowWidth;
+    let h = mainEl ? mainEl.offsetHeight : p.windowHeight;
     p.resizeCanvas(w, h);
     p.background(255);
     firstBlock = true;
   };
 
+  function isOverUI() {
+    const el = document.elementFromPoint(p.mouseX, p.mouseY);
+    return el?.closest("#settings-panel") || el?.closest("#settings-trigger");
+  }
+
   p.mousePressed = function () {
-    firstBlock = true;
+    if (!isOverUI()) firstBlock = true;
   };
 
   function getCycleFill() {
@@ -94,12 +94,7 @@ new p5((p) => {
       window._sketchMessageChanged = false;
     }
 
-    const hovered = document.elementFromPoint(p.mouseX, p.mouseY);
-    const blocked =
-      hovered?.closest("#settings-panel") ||
-      hovered?.closest("#settings-trigger");
-
-    if (p.mouseIsPressed && !blocked) {
+    if (p.mouseIsPressed && !isOverUI()) {
       let d = p.dist(p.mouseX, p.mouseY, lastX, lastY);
       if (firstBlock || d > 45) {
         let w = p.random(40, 90);
@@ -121,7 +116,7 @@ new p5((p) => {
               newY = lastY + (dy > 0 ? 1 : -1) * (lastH / 2 + h / 2 - OVERLAP);
             }
           } else {
-            let distance = p.sqrt(dx * dx + dy * dy);
+            let distance = p.dist(lastX, lastY, p.mouseX, p.mouseY);
             if (distance > 0) {
               let dirX = dx / distance;
               let dirY = dy / distance;
@@ -143,9 +138,7 @@ new p5((p) => {
           y: newY,
           w: w,
           h: h,
-          char: window._sketchMessage[
-            messageIndex % window._sketchMessage.length
-          ],
+          char: window._sketchMessage[messageIndex % window._sketchMessage.length],
           s: 0.1,
           fillColor: window._sketchCycleFill ? getCycleFill() : p.color(0),
         });
