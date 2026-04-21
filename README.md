@@ -1,4 +1,4 @@
-# type-spread
+# Type Spread
 
 ![type-spread preview](./assets/images/screen.png)
 
