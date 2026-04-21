@@ -5,7 +5,7 @@ window._sketchFillColors = ["#000000", "#ff0000", "#0000ff"];
 window._sketchMessage = "EVERYWHERE IS JUST ONE PLACE";
 window._sketchMessageChanged = false;
 
-window._sketchFillSteps = 1;
+window._sketchFillSteps = 12;
 window._sketchClearCanvas = false;
 
 let blocks = [];
