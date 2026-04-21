@@ -90,6 +90,12 @@ addColorBtn?.addEventListener("click", () => {
   renderColors();
 });
 
+// --- Clear canvas button ---
+const clearCanvasBtn = document.getElementById("clear-canvas-btn");
+clearCanvasBtn?.addEventListener("click", () => {
+  window._sketchClearCanvas = true;
+});
+
 // init after sketch globals are ready (p5 sets them via window._sketch*)
 document.addEventListener("DOMContentLoaded", () => {
   // sync toggle initial states from sketch defaults

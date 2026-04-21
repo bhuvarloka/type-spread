@@ -6,6 +6,7 @@ window._sketchMessage = "EVERYWHERE IS JUST ONE PLACE";
 window._sketchMessageChanged = false;
 
 window._sketchFillSteps = 1;
+window._sketchClearCanvas = false;
 
 let blocks = [];
 let lastX, lastY, lastW, lastH;
@@ -89,6 +90,15 @@ function getRectDistanceToEdge(rectW, rectH, dirX, dirY) {
 }
 
 function draw() {
+  if (window._sketchClearCanvas) {
+    blocks = [];
+    background(255);
+    firstBlock = true;
+    fillStep = 0;
+    messageIndex = 0;
+    window._sketchClearCanvas = false;
+  }
+
   if (window._sketchMessageChanged) {
     messageIndex = 0;
     window._sketchMessageChanged = false;
