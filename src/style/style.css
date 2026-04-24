@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "./settings.css";
+@import "./settings-panel.css";
 
 *,
 *::before,
@@ -29,11 +29,3 @@ body.panel-open main {
   }
 }
 
-/* Color swatch drag handles */
-.color-swatch {
-  cursor: pointer;
-  transition: transform 0.15s ease;
-}
-.color-swatch:hover {
-  transform: scale(1.1);
-}

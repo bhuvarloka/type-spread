@@ -31,3 +31,25 @@
 label .peer ~ div {
   pointer-events: none;
 }
+
+/* Color swatch drag handles */
+.color-swatch {
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.color-swatch:hover {
+  transform: scale(1.1);
+}
+
+/* Settings trigger icon inversion (gear vs close) */
+#settings-trigger {
+  filter: invert(1);
+}
+#settings-trigger.is-open {
+  filter: none;
+}
+
+/* Color palette section visibility, driven by cycle-fill state on body */
+body:not(.cycle-fill-on) #color-palette-section {
+  display: none;
+}
