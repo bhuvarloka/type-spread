@@ -1,6 +1,6 @@
 # Type Spread
 
-![type-spread preview](./assets/images/screen.png)
+![type-spread preview](screenshot.png)
 
 A generative typography experiment built with p5.js.
 
