@@ -90,6 +90,12 @@ fillStepsInput?.addEventListener("input", () => {
   window._sketchFillSteps = parseInt(fillStepsInput.value) || 0;
 });
 
+const fontSizeInput = document.getElementById("font-size-input");
+fontSizeInput?.addEventListener("input", () => {
+  const v = parseInt(fontSizeInput.value);
+  if (v >= 8) window._sketchFontSize = v;
+});
+
 addColorBtn?.addEventListener("click", () => {
   window._sketchFillColors.push("#ffffff");
   renderColors();
@@ -108,5 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
     syncCycleFillState();
   }
   if (fillStepsInput) fillStepsInput.value = window._sketchFillSteps;
+  if (fontSizeInput) fontSizeInput.value = window._sketchFontSize;
   renderColors();
 });

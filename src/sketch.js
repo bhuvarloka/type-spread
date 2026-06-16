@@ -8,6 +8,7 @@ window._sketchMessage = "EVERYWHERE IS JUST ONE PLACE";
 window._sketchMessageChanged = false;
 window._sketchFillSteps = 12;
 window._sketchClearCanvas = false;
+window._sketchFontSize = 32;
 
 new p5((p) => {
   const mainEl = document.querySelector("main");
@@ -95,10 +96,11 @@ new p5((p) => {
     }
 
     if (p.mouseIsPressed && !isOverUI()) {
+      const fontScale = window._sketchFontSize / 32;
       let d = p.dist(p.mouseX, p.mouseY, lastX, lastY);
-      if (firstBlock || d > 45) {
-        let w = p.random(40, 90);
-        let h = p.random(40, 90);
+      if (firstBlock || d > 45 * fontScale) {
+        let w = p.random(40, 90) * fontScale;
+        let h = p.random(40, 90) * fontScale;
         let newX = p.mouseX;
         let newY = p.mouseY;
 
@@ -141,6 +143,7 @@ new p5((p) => {
           char: window._sketchMessage[messageIndex % window._sketchMessage.length],
           s: 0.1,
           fillColor: window._sketchCycleFill ? getCycleFill() : p.color(0),
+          fontSize: window._sketchFontSize,
         });
 
         messageIndex = (messageIndex + 1) % window._sketchMessage.length;
@@ -162,7 +165,7 @@ new p5((p) => {
       p.fill(b.fillColor);
       p.rect(0, 0, b.w, b.h);
       p.fill(255);
-      p.textSize(32);
+      p.textSize(b.fontSize);
       p.text(b.char, 0, 0);
       p.pop();
 
